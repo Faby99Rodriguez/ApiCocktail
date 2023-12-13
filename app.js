@@ -39,16 +39,23 @@ app.post('/favoritos/agregar', async (req, res) => {
       return res.status(400).json({ error: 'Se requiere nombre' });
     }
 
+    console.log('Insertando en la base de datos:', nombre, imagen);
+
     const [result] = await db.query(
       'INSERT INTO CocktailsFavoritos (Nombre, Imagen) VALUES (?, ?)',
       [nombre, imagen]
     );
 
+    console.log('Resultado de la inserción:', result);
+
     const [cocktailsAgregados] = await db.query('SELECT * FROM CocktailsFavoritos WHERE Nombre = ?', [nombre]);
+
+    console.log('Cocktails agregados:', cocktailsAgregados);
 
     if (cocktailsAgregados.length > 0) {
       const cocktailsAgregado = cocktailsAgregados[0];
-      res.status(201).json({ success: true, message: 'Cocktails favorite agregado correctamente', cocktailsAgregado });
+      console.log('Cocktail favorito agregado correctamente:', cocktailsAgregado);
+      res.status(201).json({ success: true, message: 'Cocktails favorito agregado correctamente', cocktailsAgregado });
     } else {
       console.error('Error al agregar cocktail favorito: No se pudo obtener el cocktail agregado');
       res.status(500).json({ error: 'Error al agregar cocktail favorito', details: 'No se pudo obtener el cocktail agregado' });
@@ -60,6 +67,7 @@ app.post('/favoritos/agregar', async (req, res) => {
     res.status(500).json({ error: 'Error al agregar cocktail favorito', details: error.message });
   }
 });
+
 
 app.delete('/favoritos/quitar/:id', async (req, res) => {
   const id = req.params.id;
