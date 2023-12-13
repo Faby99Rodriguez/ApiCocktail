@@ -10,7 +10,7 @@ router.get('/favoritos', authenticateToken, async (req, res) => {
     const userId = req.user.id; // Asume que el usuario está incluido por el middleware
     
     // Consulta a la base de datos para obtener jefes favoritos del usuario
-    const [rows] = await db.query('SELECT * FROM JefesFavoritos WHERE UserId = ?', [userId]);
+    const [rows] = await db.query('SELECT * FROM CocktailsFavoritos WHERE UserId = ?', [userId]);
     const jefesFavoritos = rows;
 
     res.json({ success: true, jefesFavoritos });
